@@ -168,23 +168,23 @@
     }
 
     .icon-btn.complete {
-      background: rgba(16, 185, 129, 0.15);
-      color: #047857;
+      background: linear-gradient(135deg, #7cffcb, #31c48d);
+      color: #ffffff;
     }
 
     .icon-btn.complete:hover {
       transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 14px 24px rgba(49, 196, 141, 0.35);
     }
 
     .icon-btn.delete {
-      background: rgba(239, 68, 68, 0.15);
-      color: #b91c1c;
+      background: linear-gradient(135deg, #ff9aa2, #ff5f7e);
+      color: #ffffff;
     }
 
     .icon-btn.delete:hover {
       transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(239, 68, 68, 0.2);
+      box-shadow: 0 14px 24px rgba(255, 95, 126, 0.35);
     }
 
     #empty-state {
@@ -276,17 +276,16 @@
       }
 
       .icon-btn.complete {
-        background: rgba(16, 185, 129, 0.18);
-        color: #34d399;
+        background: linear-gradient(135deg, rgba(124, 255, 203, 0.85), rgba(49, 196, 141, 0.85));
+        color: #ffffff;
       }
 
       .icon-btn.delete {
-        background: rgba(239, 68, 68, 0.18);
-        color: #f87171;
+        background: linear-gradient(135deg, rgba(255, 154, 162, 0.85), rgba(255, 95, 126, 0.85));
+        color: #ffffff;
       }
 
       #empty-state {
         color: #94a3b8;
       }
     }
-  
