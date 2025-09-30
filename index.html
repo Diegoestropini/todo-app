@@ -332,6 +332,16 @@
       let tasks = [];
       let currentFilter = 'all';
 
+      let fallbackCounter = 0;
+
+      const generateId = () => {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+          return crypto.randomUUID();
+        }
+        fallbackCounter += 1;
+        return `${Date.now()}-${fallbackCounter}`;
+      };
+
       const emptyMessages = {
         all: 'No hay tareas todavia.',
         pending: 'No hay tareas pendientes.',
@@ -418,7 +428,7 @@
         }
 
         const newTask = {
-          id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(),
+          id: generateId(),
           text: trimmed,
           completed: false
         };
@@ -468,10 +478,11 @@
             tasks = parsed
               .filter(task => task && typeof task.text === 'string')
               .map(task => ({
-                id: task.id || Date.now().toString(),
+                id: task.id || generateId(),
                 text: task.text,
                 completed: Boolean(task.completed)
               }));
+            saveTasks();
           }
         } catch (error) {
           console.error('No se pudieron cargar las tareas guardadas:', error);
