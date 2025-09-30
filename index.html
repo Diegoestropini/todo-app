@@ -321,6 +321,7 @@
 
   <script>
     (() => {
+      const app = document.querySelector('.app');
       const form = document.getElementById('task-form');
       const input = document.getElementById('task-input');
       const list = document.getElementById('task-list');
@@ -331,6 +332,18 @@
 
       let tasks = [];
       let currentFilter = 'all';
+      let persistenceEnabled = true;
+
+      const persistenceNotice = document.createElement('p');
+      persistenceNotice.id = 'persistence-notice';
+      persistenceNotice.style.marginTop = '16px';
+      persistenceNotice.style.padding = '12px 16px';
+      persistenceNotice.style.borderRadius = '12px';
+      persistenceNotice.style.background = 'rgba(239, 68, 68, 0.12)';
+      persistenceNotice.style.color = '#b91c1c';
+      persistenceNotice.style.display = 'none';
+      persistenceNotice.textContent = 'El almacenamiento local no está disponible. Las tareas solo se guardarán durante esta sesión.';
+      app.appendChild(persistenceNotice);
 
       let fallbackCounter = 0;
 
@@ -349,13 +362,25 @@
       };
 
       const saveTasks = () => {
-        localStorage.setItem(storageKey, JSON.stringify(tasks));
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(tasks));
+          if (!persistenceEnabled) {
+            persistenceEnabled = true;
+            persistenceNotice.style.display = 'none';
+          }
+        } catch (error) {
+          persistenceEnabled = false;
+          persistenceNotice.style.display = 'block';
+          console.warn('No se pudieron guardar las tareas en el almacenamiento local:', error);
+        }
       };
 
       const updatePendingCount = () => {
         const count = tasks.filter(task => !task.completed).length;
         const label = count === 1 ? '1 tarea pendiente' : `${count} tareas pendientes`;
-        pendingCount.textContent = label;
+        pendingCount.textContent = persistenceEnabled
+          ? label
+          : `${label} · Solo se guardarán durante esta sesión`;
       };
 
       const getFilteredTasks = () => {
@@ -470,7 +495,15 @@
         });
       });
 
-      const storedTasks = localStorage.getItem(storageKey);
+      let storedTasks = null;
+      try {
+        storedTasks = localStorage.getItem(storageKey);
+      } catch (error) {
+        persistenceEnabled = false;
+        persistenceNotice.style.display = 'block';
+        console.warn('El almacenamiento local no está disponible:', error);
+      }
+
       if (storedTasks) {
         try {
           const parsed = JSON.parse(storedTasks);
